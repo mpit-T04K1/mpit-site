@@ -20,5 +20,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            cd /home/matv864/mpit-site
             git restore .
             git pull
