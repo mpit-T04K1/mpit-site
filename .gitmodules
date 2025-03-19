@@ -1,0 +1,6 @@
+[submodule "mpit-backend"]
+	path = mpit-backend
+	url = https://github.com/mpit-T04K1/mpit-backend
+[submodule "mpit-frontend"]
+	path = mpit-frontend
+	url = https://github.com/mpit-T04K1/mpit-frontend
