@@ -1,0 +1,26 @@
+name: Docker Compose Action
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          # username: 1
+          # password: 1
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/matv864/mpit-site
+            git restore .
+            git pull
