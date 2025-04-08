@@ -33,6 +33,52 @@ CREATE TABLE public.alembic_version (
 ALTER TABLE public.alembic_version OWNER TO postgres;
 
 --
+-- Name: analytics; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.analytics (
+    id integer NOT NULL,
+    company_id integer NOT NULL,
+    date_range_start timestamp without time zone NOT NULL,
+    date_range_end timestamp without time zone NOT NULL,
+    total_revenue double precision NOT NULL,
+    total_bookings integer NOT NULL,
+    average_booking_value double precision NOT NULL,
+    completion_rate double precision NOT NULL,
+    cancellation_rate double precision NOT NULL,
+    most_popular_service_id integer,
+    created_at timestamp without time zone NOT NULL,
+    service_statistics json,
+    time_statistics json,
+    client_statistics json
+);
+
+
+ALTER TABLE public.analytics OWNER TO postgres;
+
+--
+-- Name: analytics_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.analytics_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.analytics_id_seq OWNER TO postgres;
+
+--
+-- Name: analytics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.analytics_id_seq OWNED BY public.analytics.id;
+
+
+--
 -- Name: bookings; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -187,6 +233,45 @@ ALTER SEQUENCE public.locations_id_seq OWNED BY public.locations.id;
 
 
 --
+-- Name: media; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.media (
+    id integer NOT NULL,
+    company_id integer NOT NULL,
+    name character varying NOT NULL,
+    type character varying NOT NULL,
+    url character varying NOT NULL,
+    description text,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.media OWNER TO postgres;
+
+--
+-- Name: media_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.media_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.media_id_seq OWNER TO postgres;
+
+--
+-- Name: media_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.media_id_seq OWNED BY public.media.id;
+
+
+--
 -- Name: moderation_records; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -224,6 +309,45 @@ ALTER SEQUENCE public.moderation_records_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.moderation_records_id_seq OWNED BY public.moderation_records.id;
+
+
+--
+-- Name: notifications; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.notifications (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    content text NOT NULL,
+    notification_type character varying(50) NOT NULL,
+    read boolean NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.notifications OWNER TO postgres;
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.notifications_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.notifications_id_seq OWNER TO postgres;
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
@@ -437,6 +561,13 @@ ALTER SEQUENCE public.working_hours_id_seq OWNED BY public.working_hours.id;
 
 
 --
+-- Name: analytics id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.analytics ALTER COLUMN id SET DEFAULT nextval('public.analytics_id_seq'::regclass);
+
+
+--
 -- Name: bookings id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -458,10 +589,24 @@ ALTER TABLE ONLY public.locations ALTER COLUMN id SET DEFAULT nextval('public.lo
 
 
 --
+-- Name: media id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.media ALTER COLUMN id SET DEFAULT nextval('public.media_id_seq'::regclass);
+
+
+--
 -- Name: moderation_records id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.moderation_records ALTER COLUMN id SET DEFAULT nextval('public.moderation_records_id_seq'::regclass);
+
+
+--
+-- Name: notifications id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
 
 
 --
@@ -503,7 +648,13 @@ ALTER TABLE ONLY public.working_hours ALTER COLUMN id SET DEFAULT nextval('publi
 -- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.alembic_version (version_num) VALUES ('387be1be4e71');
+INSERT INTO public.alembic_version (version_num) VALUES ('dd12df7bf33a');
+
+
+--
+-- Data for Name: analytics; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
 
 
 --
@@ -525,7 +676,19 @@ INSERT INTO public.alembic_version (version_num) VALUES ('387be1be4e71');
 
 
 --
+-- Data for Name: media; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
 -- Data for Name: moderation_records; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: notifications; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
@@ -562,6 +725,13 @@ INSERT INTO public.users (id, email, hashed_password, first_name, last_name, pho
 
 
 --
+-- Name: analytics_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.analytics_id_seq', 1, false);
+
+
+--
 -- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -583,10 +753,24 @@ SELECT pg_catalog.setval('public.locations_id_seq', 1, false);
 
 
 --
+-- Name: media_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.media_id_seq', 1, false);
+
+
+--
 -- Name: moderation_records_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.moderation_records_id_seq', 1, false);
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.notifications_id_seq', 1, false);
 
 
 --
@@ -633,6 +817,14 @@ ALTER TABLE ONLY public.alembic_version
 
 
 --
+-- Name: analytics analytics_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.analytics
+    ADD CONSTRAINT analytics_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: bookings bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -657,11 +849,27 @@ ALTER TABLE ONLY public.locations
 
 
 --
+-- Name: media media_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.media
+    ADD CONSTRAINT media_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: moderation_records moderation_records_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.moderation_records
     ADD CONSTRAINT moderation_records_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notifications notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -713,6 +921,13 @@ ALTER TABLE ONLY public.working_hours
 
 
 --
+-- Name: ix_analytics_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_analytics_id ON public.analytics USING btree (id);
+
+
+--
 -- Name: ix_bookings_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -734,10 +949,24 @@ CREATE INDEX ix_locations_id ON public.locations USING btree (id);
 
 
 --
+-- Name: ix_media_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_media_id ON public.media USING btree (id);
+
+
+--
 -- Name: ix_moderation_records_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX ix_moderation_records_id ON public.moderation_records USING btree (id);
+
+
+--
+-- Name: ix_notifications_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_notifications_id ON public.notifications USING btree (id);
 
 
 --
@@ -818,6 +1047,14 @@ CREATE INDEX ix_working_hours_id ON public.working_hours USING btree (id);
 
 
 --
+-- Name: analytics analytics_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.analytics
+    ADD CONSTRAINT analytics_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
 -- Name: bookings bookings_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -882,6 +1119,14 @@ ALTER TABLE ONLY public.locations
 
 
 --
+-- Name: media media_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.media
+    ADD CONSTRAINT media_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
 -- Name: moderation_records moderation_records_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -895,6 +1140,14 @@ ALTER TABLE ONLY public.moderation_records
 
 ALTER TABLE ONLY public.moderation_records
     ADD CONSTRAINT moderation_records_moderator_id_fkey FOREIGN KEY (moderator_id) REFERENCES public.users(id);
+
+
+--
+-- Name: notifications notifications_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT notifications_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
