@@ -1,5 +1,12 @@
-# git submodule update --remote --recursive
+# automatic recurse
 # git config --global submodule.recurse true
+
+# start work with submodules
+# git submodule update --init
+
+# get new versions of submodules
+# git submodule update --remote
+
 [submodule "mpit-backend"]
 	path = mpit-backend
 	url = https://github.com/mpit-T04K1/mpit-backend
