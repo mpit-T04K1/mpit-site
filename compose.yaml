@@ -28,6 +28,8 @@ services:
     ports:
       - 8005:8000
     environment:
+      MAIN_PATH: ${MAIN_PATH}
+
       SECRET_KEY: ${SECRET_KEY}
       API_PREFIX: ${API_PREFIX}
       ADMIN_PATH: ${ADMIN_PATH}
