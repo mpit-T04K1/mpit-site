@@ -23,4 +23,3 @@ jobs:
             cd /home/matv864/mpit-site
             git restore .
             git pull
-            git submodule update --init --recursive
