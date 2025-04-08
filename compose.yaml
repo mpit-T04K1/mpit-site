@@ -1,15 +1,16 @@
 name: mpit-site
 
 services:
-  # mpit-frontend:
-  #   container_name: mpit-frontend
-  #   restart: always
-  #   build: ./mpit-frontend
-  #   env_file: .env
-  #   ports:
-  #     - 8006:3000
-  #   environment:
-  #     API_ENDPOINT: ${API_ENDPOINT}
+  mpit-frontend:
+    container_name: mpit-frontend
+    build: ./mpit-frontend
+    ports:
+      - 8006:8080
+    env_file: ../.env
+    environment:
+      MAIN_PATH: ${MAIN_PATH}
+      YANDEX_MAPS_API_KEY: ${YANDEX_MAPS_API_KEY}
+    restart: unless-stopped
 
   mpit-backend:
     container_name: mpit-backend
