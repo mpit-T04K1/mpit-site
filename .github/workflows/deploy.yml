@@ -25,3 +25,4 @@ jobs:
             cd mpit-site
             git restore .
             git pull
+            docker compose up -d --build
