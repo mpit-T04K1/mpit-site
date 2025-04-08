@@ -6,3 +6,6 @@
 [submodule "mpit-frontend"]
 	path = mpit-frontend
 	url = https://github.com/mpit-T04K1/mpit-frontend
+[submodule "mpit-tg-bot"]
+	path = mpit-tg-bot
+	url = https://github.com/mpit-T04K1/mpit-tg-bot
