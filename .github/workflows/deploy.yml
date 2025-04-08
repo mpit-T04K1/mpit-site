@@ -20,6 +20,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home/matv864/mpit-site
+            cd /home/matv864
+            date >> ci_cd_notes.txt
+            cd mpit-site
             git restore .
             git pull
