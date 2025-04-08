@@ -44,6 +44,16 @@ services:
       JWT_TOKEN_LIFETIME: ${JWT_TOKEN_LIFETIME}
       JWT_ALGORITHM: ${JWT_ALGORITHM}
 
+  mpit-bot:
+    container_name: mpit-bot
+    restart: always
+    build: ./mpit-tg-bot
+    env_file: .env
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      REGISTRATION_URL: ${REGISTRATION_URL}
+
+  
 
   mpit-database:
     container_name: mpit-database
