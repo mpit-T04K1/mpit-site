@@ -1,40 +1,45 @@
 name: mpit-site
 
 services:
-  mpit-frontend:
-    container_name: mpit-frontend
-    restart: always
-    build: ./mpit-frontend
-    env_file: .env
-    ports:
-      - 8006:3000
-    environment:
-      API_ENDPOINT: ${API_ENDPOINT}
+  # mpit-frontend:
+  #   container_name: mpit-frontend
+  #   restart: always
+  #   build: ./mpit-frontend
+  #   env_file: .env
+  #   ports:
+  #     - 8006:3000
+  #   environment:
+  #     API_ENDPOINT: ${API_ENDPOINT}
 
   mpit-backend:
     container_name: mpit-backend
     restart: always
     build: ./mpit-backend
     env_file: .env
-    # healthcheck:
-    #   test: curl -sSf http://localhost:8000/healthcheck
-    #   interval: 60s
-    #   start_period: 1s
-    #   timeout: 600s
+    healthcheck:
+      test: curl -sSf http://localhost:8000/health & curl -sSf http://localhost:8000/health/db
+      interval: 60s
+      start_period: 1s
+      timeout: 600s
     depends_on:
-      mpit-s3:
-        condition: service_healthy
-        restart: true
       mpit-database:
         condition: service_healthy
         restart: true
     ports:
       - 8005:8000
     environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
+      SECRET_KEY: ${SECRET_KEY}
+      API_PREFIX: ${API_PREFIX}
+      ADMIN_PATH: ${ADMIN_PATH}
+
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_URL: ${DATABASE_URL}
+
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_TOKEN_LIFETIME: ${JWT_TOKEN_LIFETIME}
+      JWT_ALGORITHM: ${JWT_ALGORITHM}
 
 
   mpit-database:
@@ -56,52 +61,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  
-  mpit-s3:
-    container_name: mpit-s3
-    restart: always
-    image: minio/minio
-    env_file: .env
-    command: |
-      server --console-address ":9001" /data
-    volumes:
-      - mpit-s3-data:/data
-    healthcheck:
-      test: mc ready local
-      interval: 60s
-      start_period: 1s
-      timeout: 600s
-    ports:
-      - 9000:9000
-      - 9001:9001
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-  
-  mpit-s3-setup:
-    image: minio/mc
-    env_file: .env
-    depends_on:
-      mpit-s3:
-        condition: service_healthy
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
-      S3_SECRET_KEY: ${S3_SECRET_KEY}
-      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
-    entrypoint:
-      /bin/sh -c "
-      /usr/bin/mc alias set s3service http://mpit-s3:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD;
-      /usr/bin/mc mb s3service/$$S3_BUCKET_NAME;
-      /usr/bin/mc anonymous set download s3service/$$S3_BUCKET_NAME;
-      /usr/bin/mc admin user svcacct add --access-key "$$S3_ACCESS_KEY" --secret-key "$$S3_SECRET_KEY" s3service $$MINIO_ROOT_USER;
-      exit 0;
-      "
 
 
 volumes:
-  mpit-s3-data:
-    name: mpit-s3-data
   mpit-postgres-data:
     name: mpit-postgres-data
