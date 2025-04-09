@@ -29,7 +29,7 @@ services:
         condition: service_healthy
         restart: true
     ports:
-      - 8005:8000
+      - 8005:8080
     environment:
       MAIN_PATH: ${MAIN_PATH}
 
