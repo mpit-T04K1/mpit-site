@@ -6,7 +6,7 @@ services:
     build: ./mpit-frontend
     ports:
       - 8006:8080
-    env_file: ../.env
+    env_file: .env
     environment:
       MAIN_PATH: ${MAIN_PATH}
       YANDEX_MAPS_API_KEY: ${YANDEX_MAPS_API_KEY}
@@ -61,7 +61,7 @@ services:
     image: postgres:latest
     env_file: .env
     volumes:
-      - ./dumps/dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
+      # - ./dumps/dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
       - mpit-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -d udom
