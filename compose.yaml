@@ -10,6 +10,8 @@ services:
     environment:
       MAIN_PATH: ${MAIN_PATH}
       YANDEX_MAPS_API_KEY: ${YANDEX_MAPS_API_KEY}
+      FUSION_BRAIN_API_KEY: ${FUSION_BRAIN_API_KEY}
+      FUSION_BRAIN_SECRET_KEY: ${FUSION_BRAIN_SECRET_KEY}
     restart: unless-stopped
 
   mpit-backend:
